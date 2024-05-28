@@ -1,0 +1,23 @@
+version: "3"
+services:
+  react-app:
+    build:
+      context: ./leaderboard
+      dockerfile: Dockerfile
+    ports:
+      - "6968:80"
+    networks:
+      - app-network
+
+  express-server:
+    build:
+      context: ./leaderboard_server
+      dockerfile: Dockerfile
+    ports:
+      - "6969:6969"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
