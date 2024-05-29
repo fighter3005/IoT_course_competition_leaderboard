@@ -59,9 +59,10 @@ app.post("/competitors", async (req, res) => {
   }
 });
 
-app.post("/competitors/:name/color", authenticate, async (req, res) => {
+app.post("/competitors/:name/color", async (req, res) => {
   const { name } = req.params;
   const { color } = req.body;
+  // console.log(name, color);
   try {
     await setColorForCompetitor(name, color);
     res.status(200).json({ message: "Color set successfully" });
