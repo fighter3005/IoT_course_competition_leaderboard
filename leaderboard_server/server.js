@@ -3,8 +3,8 @@ const cors = require("cors");
 const app = express();
 const port = 6969;
 
-const username = "admin";
-const password = "password";
+const username = "laura";
+const password = "#IoT24";
 
 const {
   saveCompetitorData,
