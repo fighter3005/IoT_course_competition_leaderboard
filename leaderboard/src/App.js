@@ -16,6 +16,7 @@ import "./App.css";
 
 // const url = "http://express-server:6969";
 const url = "https://api.leaderboard.cau.ninja";
+const max_packages = 4 * 1500;
 // const url = "http://localhost:6969";
 
 // Register Chart.js components
@@ -107,8 +108,6 @@ function App() {
       setPassword(localStorage.getItem("password") || "");
     }
   }, []);
-
-  const max_packages = 4 * 1500;
 
   const handleDelete = async (name) => {
     try {
