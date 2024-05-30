@@ -96,7 +96,7 @@ function App() {
 
     fetchData();
 
-    const interval = setInterval(fetchData, 2000); // Fetch data every 2 seconds
+    const interval = setInterval(fetchData, 500); // Fetch data every 2 seconds
     return () => clearInterval(interval); // Cleanup interval on unmount
   }, []);
 
