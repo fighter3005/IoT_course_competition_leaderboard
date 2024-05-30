@@ -14,7 +14,6 @@ import { FaTimes } from "react-icons/fa";
 import Modal from "react-modal";
 import "./App.css";
 
-// const url = "http://express-server:6969";
 const url = "https://api.leaderboard.cau.ninja";
 const max_packages = 4 * 1500;
 // const url = "http://localhost:6969";
@@ -37,7 +36,7 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
-    width: "400px", // Make the modal wider
+    width: "400px",
   },
 };
 
@@ -96,8 +95,8 @@ function App() {
 
     fetchData();
 
-    const interval = setInterval(fetchData, 500); // Fetch data every 2 seconds
-    return () => clearInterval(interval); // Cleanup interval on unmount
+    const interval = setInterval(fetchData, 500); // Fetch data every 0.5 seconds
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {

@@ -15,10 +15,10 @@ competitors = [
 
 # Function to generate dummy data
 def generate_dummy_data(nodeID, measurement_counter):
-    temp = round(random.uniform(-10, 35), 1)
-    humidity = round(random.uniform(10, 90), 1)
-    timestamp = int(time.time())
-    tx_time = random.randint(100, 1000)
+    temp = round(random.uniform(-25, 200), 1)
+    humidity = round(random.uniform(0, 100), 1)
+    timestamp = time.time()
+    tx_time = random.randint(10, 1000)
     return f"{nodeID};{measurement_counter};{temp};{humidity};{timestamp};{tx_time}"
 
 # Send color information to the server
@@ -35,15 +35,21 @@ for competitor in competitors:
 # Generate and send dummy data
 try:
     start_time = time.time()
-    measurement_counter = 0
-    while time.time() - start_time <= 300:  # Run for 5 minutes
+    measurement_counters = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+    while time.time() - start_time <= 308:  # Run for 5 minutes
+        index = 0
         for competitor in competitors:
             data_batch = []
+            id = 0
             for nodeID in range(1, 5):  # 4 nodes per competitor
+                id += nodeID
+                # print(id)
                 for _ in range(5):  # Generate 5 measurements per node per batch
-                    data = generate_dummy_data(nodeID, measurement_counter)
+                    measurement_counters[index][nodeID-1] += 1
+                    data = generate_dummy_data(id, measurement_counters[index][nodeID-1]) 
                     data_batch.append(data)
-                    measurement_counter += 1
+            index += 1
+       
 
             # Send data batch to the server
             data_to_send = {competitor["name"]: data_batch}

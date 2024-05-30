@@ -33,6 +33,7 @@ const saveCompetitorData = (data) => {
     db.serialize(() => {
       for (const [competitorName, values] of Object.entries(data)) {
         values.forEach((value) => {
+          console.log(value);
           const [
             nodeID,
             measurementCounter,
@@ -41,15 +42,24 @@ const saveCompetitorData = (data) => {
             timestamp,
             txTime,
           ] = value.split(";");
-          stmt.run(
-            competitorName,
-            parseInt(nodeID),
-            parseInt(measurementCounter),
-            parseFloat(temp),
-            parseFloat(humidity),
-            parseInt(timestamp),
-            parseInt(txTime)
-          );
+          if (
+            ["1", "3", "6", "10"].includes(nodeID.toString()) &&
+            Number(measurementCounter) <= 1500 &&
+            Number(temp) >= -25 &&
+            Number(temp) <= 200 &&
+            Number(humidity) >= 0 &&
+            !Number(humidity) <= 100
+          ) {
+            stmt.run(
+              competitorName,
+              parseInt(nodeID),
+              parseInt(measurementCounter),
+              parseFloat(temp),
+              parseFloat(humidity),
+              parseInt(timestamp),
+              parseInt(txTime)
+            );
+          }
         });
       }
       stmt.finalize();

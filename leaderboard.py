@@ -2,22 +2,20 @@ import serial
 import re
 import requests
 import random
-import time
 from threading import Timer
 
-color = None
-competitorName = "Group_X"
+################################################### TODO: ###################################################
+color = None # TODO: set your custom color here
+competitorName = "Group_X" # TODO: set your group name here
+serial_port = '/dev/tty.usbmodem0006832480041' # TODO: set serial port here!
+baud_rate = 115200 # TODO: set baud rate here!
 
-# Configure the serial port (replace 'COM3' with your port name and set the appropriate baud rate)
-serial_port = '/dev/tty.usbmodem0006832480041'
-baud_rate = 115200
-
-# Regular expression to match the desired output format
-pattern = re.compile(r'(\d+);(\d+);(-?\d+\.\d);(\d+\.\d);(\d+);(\d+)')
+# Regular expression to match the desired output format (also enforced server-side)
+pattern = re.compile(r'(1|3|6|10);(\d+);(-?(?:25\.0|[0-9]|[1-9]\d|1[0-9]\d|200)\.\d);((?:100\.0|[0-9]|[1-9]\d)\.\d);(\d+\.\d+);(\d+)')
+#re.compile(r'(\d+);(\d+);(-?\d+\.\d);(\d+\.\d);(\d+);(\d+)')
 
 # Server URL
-# server_url = "https://api.leaderboard.cau.ninja"
-server_url = "http://localhost:6969"
+server_url = "https://api.leaderboard.cau.ninja"
 
 # Attempt to establish a serial connection
 try:
