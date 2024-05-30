@@ -72,7 +72,6 @@ const getCompetitorsData = () => {
       FROM competitor_data c
       LEFT JOIN competitor_colors co ON c.competitorName = co.competitorName
       GROUP BY c.competitorName, c.nodeID
-      HAVING COUNT(*) <= 1500
     `;
 
     db.all(query, [], (err, rows) => {
