@@ -86,6 +86,15 @@ function App() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        data.sort(
+          (a, b) =>
+            ((0.2 * b.totalPackages) / max_packages) * 100 +
+            ((0.5 * b.packagesUnder500ms) / max_packages) * 100 -
+            0.3 * (1 - (b.avgLatency - 1) / 999) -
+            (0.2 * (a.totalPackages / max_packages) * 100 +
+              ((0.5 * a.packagesUnder500ms) / max_packages) * 100 -
+              0.3 * (1 - (a.avgLatency - 1) / 999))
+        );
         setCompetitors(data);
         setError(null); // Clear the error if the fetch is successful
       } catch (error) {

@@ -36,7 +36,7 @@ for competitor in competitors:
 try:
     start_time = time.time()
     measurement_counters = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-    while time.time() - start_time <= 308:  # Run for 5 minutes
+    while time.time() - start_time <= 310:  # Run for 5 minutes
         index = 0
         for competitor in competitors:
             data_batch = []
