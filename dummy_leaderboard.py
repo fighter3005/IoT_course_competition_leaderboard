@@ -3,8 +3,8 @@ import random
 import time
 
 # Server URL
-server_url = "http://localhost:6969"
-# server_url = "https://api.leaderboard.cau.ninja"
+# server_url = "http://localhost:6969"
+server_url = "https://api.leaderboard.cau.ninja"
 
 competitors = [
     {"name": "Competitor_A", "color": "#FF5733"},

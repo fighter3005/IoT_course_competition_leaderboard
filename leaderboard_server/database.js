@@ -1,6 +1,8 @@
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database(":memory:");
 
+const max_measurement_counter = 1500;
+
 // Initialize the database schema
 db.serialize(() => {
   db.run(
@@ -44,7 +46,7 @@ const saveCompetitorData = (data) => {
           ] = value.split(";");
           if (
             ["1", "3", "6", "10"].includes(nodeID.toString()) &&
-            Number(measurementCounter) <= 1500 &&
+            Number(measurementCounter) <= max_measurement_counter &&
             Number(temp) >= -25 &&
             Number(temp) <= 200 &&
             Number(humidity) >= 0 &&
