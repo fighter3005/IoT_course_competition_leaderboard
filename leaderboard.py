@@ -11,8 +11,7 @@ serial_port = '/dev/tty.usbmodem0006832480041' # TODO: set serial port here!
 baud_rate = 115200 # TODO: set baud rate here!
 
 # Regular expression to match the desired output format (also enforced server-side)
-pattern = re.compile(r'(1|3|6|10);(\d+);(-?(?:25\.0|[0-9]|[1-9]\d|1[0-9]\d|200)\.\d);((?:100\.0|[0-9]|[1-9]\d)\.\d);(\d+\.\d+);(\d+)')
-#re.compile(r'(\d+);(\d+);(-?\d+\.\d);(\d+\.\d);(\d+);(\d+)')
+re.compile(r'((1|3|6|10));(\d+);(-?\d+\.\d);(\d+\.\d);(\d+);(\d+)')
 
 # Server URL
 server_url = "https://api.leaderboard.cau.ninja"

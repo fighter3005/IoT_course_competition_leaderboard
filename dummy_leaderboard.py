@@ -19,7 +19,7 @@ def generate_dummy_data(nodeID, measurement_counter):
     humidity = round(random.uniform(0, 100), 1)
     timestamp = time.time()
     tx_time = random.randint(10, 1000)
-    return f"{nodeID};{measurement_counter};{temp};{humidity};{timestamp};{tx_time}"
+    return f"{nodeID};{measurement_counter};{temp};{humidity};{int(round(timestamp))};{tx_time}"
 
 # Send color information to the server
 for competitor in competitors:

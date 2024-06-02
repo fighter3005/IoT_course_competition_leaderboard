@@ -2,6 +2,7 @@ const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database(":memory:");
 
 const max_measurement_counter = 1500;
+const regex = /^((1|3|6|10));(\d+);(-?\d+\.\d);(\d+\.\d);(\d+);(\d+)$/;
 
 // Initialize the database schema
 db.serialize(() => {
@@ -13,7 +14,8 @@ db.serialize(() => {
       temp REAL,
       humidity REAL,
       timestamp INTEGER,
-      txTime INTEGER
+      txTime INTEGER,
+      UNIQUE(competitorName, nodeID, measurementCounter)
     )`
   );
   db.run(
@@ -28,43 +30,63 @@ db.serialize(() => {
 // Save competitor data
 const saveCompetitorData = (data) => {
   return new Promise((resolve, reject) => {
-    const stmt = db.prepare(
-      "INSERT INTO competitor_data (competitorName, nodeID, measurementCounter, temp, humidity, timestamp, txTime) VALUES (?, ?, ?, ?, ?, ?, ?)"
-    );
-
     db.serialize(() => {
       for (const [competitorName, values] of Object.entries(data)) {
         values.forEach((value) => {
-          console.log(value);
-          const [
-            nodeID,
-            measurementCounter,
-            temp,
-            humidity,
-            timestamp,
-            txTime,
-          ] = value.split(";");
-          if (
-            ["1", "3", "6", "10"].includes(nodeID.toString()) &&
-            Number(measurementCounter) <= max_measurement_counter &&
-            Number(temp) >= -25 &&
-            Number(temp) <= 200 &&
-            Number(humidity) >= 0 &&
-            !Number(humidity) <= 100
-          ) {
-            stmt.run(
-              competitorName,
-              parseInt(nodeID),
-              parseInt(measurementCounter),
-              parseFloat(temp),
-              parseFloat(humidity),
-              parseInt(timestamp),
-              parseInt(txTime)
-            );
+          if (!regex.test(value)) {
+            console.log("Invalid data format");
+            console.log(value);
+            console.log("\n");
+          } else {
+            const [
+              nodeID,
+              measurementCounter,
+              temp,
+              humidity,
+              timestamp,
+              txTime,
+            ] = value.split(";");
+
+            if (
+              ["1", "3", "6", "10"].includes(nodeID.toString()) &&
+              Number(temp) >= -25 &&
+              Number(temp) <= 200 &&
+              Number(humidity) >= 0 &&
+              Number(humidity) <= 100
+            ) {
+              db.get(
+                `SELECT COUNT(*) as count FROM competitor_data WHERE competitorName = ? AND nodeID = ?`,
+                [competitorName, parseInt(nodeID)],
+                (err, row) => {
+                  if (err) {
+                    console.error(err);
+                    reject(err);
+                  } else if (row.count < max_measurement_counter) {
+                    const stmt = db.prepare(
+                      "INSERT INTO competitor_data (competitorName, nodeID, measurementCounter, temp, humidity, timestamp, txTime) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                    );
+                    stmt.run(
+                      competitorName,
+                      parseInt(nodeID),
+                      parseInt(measurementCounter),
+                      parseFloat(temp),
+                      parseFloat(humidity),
+                      parseInt(timestamp),
+                      parseInt(txTime),
+                      (err) => {
+                        if (err) {
+                          console.error(`Error inserting data: ${err.message}`);
+                        }
+                      }
+                    );
+                    stmt.finalize();
+                  }
+                }
+              );
+            }
           }
         });
       }
-      stmt.finalize();
       resolve();
     });
   });
