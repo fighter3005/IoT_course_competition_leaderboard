@@ -96,16 +96,21 @@ function App() {
           return prev.avgLatency > current.avgLatency ? current : prev;
         }).avgLatency;
 
-        let w0 = 0.3;
-        let w1 = 0.5;
-        let w2 = 0.4;
-        const rankingFn = (a, b) =>
-          ((w0 * b.totalPackages) / max_packages) * 100 +
-          ((w1 * b.packagesUnder500ms) / max_packages) * 100 +
-          w2 * (1 - (b.avgLatency - lowest_latency) / highest_latency) * 100 -
-          (w0 * (a.totalPackages / max_packages) * 100 +
-            ((w1 * a.packagesUnder500ms) / max_packages) * 100 +
-            w2 * (1 - (a.avgLatency - lowest_latency) / highest_latency) * 100);
+        // weights for different metrics
+        let w0 = 0.3; // total packages
+        let w1 = 0.5; // packages under 500ms
+        let w2 = 0.4; // latency
+
+        /** score function */
+        const scoreFn = (competitor) =>
+          w0 * (competitor.totalPackages / max_packages) * 100 +
+          ((w1 * competitor.packagesUnder500ms) / max_packages) * 100 +
+          w2 *
+            (1 - (competitor.avgLatency - lowest_latency) / highest_latency) *
+            100;
+
+        /** function for ranking a competitor based on their score. */
+        const rankingFn = (a, b) => scoreFn(b) - scoreFn(a);
 
         data.sort(rankingFn);
         setCompetitors(data);

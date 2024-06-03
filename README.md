@@ -28,7 +28,7 @@ Then use the provided `leaderboard.py` to capture, save and send the data genera
 ## Configuration:
 
 **Frontend:**
-You need to specify the `url` of the express-server api in `App.js`. You also need to adjust the maximum amount of packages `max_packages` that can be received per competitor. You may also adjust the `rankingFn` for individual weighting of the statistics.
+You need to specify the `url` of the express-server api in `App.js`. You also need to adjust the maximum amount of packages `max_packages` that can be received per competitor. You may also adjust the `scoreFn` for individual weighting of the statistics.
 
 **Backend:** You need to configure the `port`, `username`, and `password` in `server.js` and also the `max_measurement_counter` in `database.js`. If needed, you can also adjust the constrains for the format of a valid string by modifying the if statement in the function `saveCompetitorData` or ad a regex beforehand, like in the `leaderboard.py` script.
 
