@@ -47,6 +47,7 @@ def stop_reading():
 
 stop_timer = Timer(300, stop_reading)
 stop_timer.start()
+# stop_timer_started = False
 
 # Main loop to read data if serial connection is successful
 if serial_connected:
@@ -56,6 +57,10 @@ if serial_connected:
         while serial_connected:
             line = ser.readline().decode('utf-8').strip()
             if line:
+                # print(stop_timer_started)
+                # if not stop_timer_started:
+                #         stop_timer.start()
+                #         stop_timer_started = True
                 with open(f"{competitorName}.txt", "a") as myfile:
                     myfile.write(line + "\n")
                 print(line)

@@ -17,13 +17,6 @@ import "./App.css";
 const max_packages = 4 * 1500;
 const url = "https://api.leaderboard.cau.ninja";
 // const url = "http://localhost:6969";
-const rankingFn = (a, b) =>
-  ((0.2 * b.totalPackages) / max_packages) * 100 +
-  ((0.5 * b.packagesUnder500ms) / max_packages) * 100 -
-  0.3 * (1 - (b.avgLatency - 30) / 320) -
-  (0.2 * (a.totalPackages / max_packages) * 100 +
-    ((0.5 * a.packagesUnder500ms) / max_packages) * 100 -
-    0.3 * (1 - (a.avgLatency - 30) / 320));
 
 // Register Chart.js components
 ChartJS.register(
@@ -93,6 +86,27 @@ function App() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        let lowest_latency = 0;
+        let highest_latency = 0;
+        highest_latency = data.reduce((prev, current) => {
+          return prev.avgLatency > current.avgLatency ? prev : current;
+        }).avgLatency;
+
+        lowest_latency = data.reduce((prev, current) => {
+          return prev.avgLatency > current.avgLatency ? current : prev;
+        }).avgLatency;
+
+        let w0 = 0.3;
+        let w1 = 0.5;
+        let w2 = 0.4;
+        const rankingFn = (a, b) =>
+          ((w0 * b.totalPackages) / max_packages) * 100 +
+          ((w1 * b.packagesUnder500ms) / max_packages) * 100 +
+          w2 * (1 - (b.avgLatency - lowest_latency) / highest_latency) * 100 -
+          (w0 * (a.totalPackages / max_packages) * 100 +
+            ((w1 * a.packagesUnder500ms) / max_packages) * 100 +
+            w2 * (1 - (a.avgLatency - lowest_latency) / highest_latency) * 100);
+
         data.sort(rankingFn);
         setCompetitors(data);
         setError(null); // Clear the error if the fetch is successful
