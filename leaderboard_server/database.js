@@ -1,8 +1,15 @@
 const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database(":memory:");
 
+const persistance = false;
 const max_measurement_counter = 1500;
 const regex = /^((1|3|6|10));(\d+);(-?\d+\.\d);(\d+\.\d);(\d+);(\d+)$/;
+
+let db;
+if (persistance) {
+  db = new sqlite3.Database("./persistance/competitors.db");
+} else {
+  db = new sqlite3.Database(":memory:");
+}
 
 // Initialize the database schema
 db.serialize(() => {
@@ -16,14 +23,26 @@ db.serialize(() => {
       timestamp INTEGER,
       txTime INTEGER,
       UNIQUE(competitorName, nodeID, measurementCounter)
-    )`
+    )`,
+    (err) => {
+      if (err) {
+        console.log("Table already created!");
+        // Table already created
+      }
+    }
   );
   db.run(
     `CREATE TABLE competitor_colors (
       competitorName TEXT,
       color TEXT,
       FOREIGN KEY (competitorName) REFERENCES competitor_data(competitorName) ON DELETE CASCADE
-    )`
+    )`,
+    (err) => {
+      if (err) {
+        console.log("Table already created!");
+        // Table already created
+      }
+    }
   );
 });
 
