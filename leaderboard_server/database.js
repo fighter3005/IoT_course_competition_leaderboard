@@ -1,6 +1,6 @@
 const sqlite3 = require("sqlite3").verbose();
 
-const persistance = true;
+const persistance = false;
 const max_measurement_counter = 1500;
 const regex = /^((1|3|6|10));(\d+);(-?\d+\.\d);(\d+\.\d);(\d+);(\d+)$/;
 
