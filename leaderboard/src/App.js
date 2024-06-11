@@ -86,43 +86,45 @@ function App() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        let lowest_latency = 0;
-        let highest_latency = 0;
-        highest_latency = data.reduce((prev, current) => {
-          return prev.avgLatency > current.avgLatency ? prev : current;
-        }).avgLatency;
+        if (data.length !== 0) {
+          let lowest_latency = 0;
+          let highest_latency = 0;
+          highest_latency = data.reduce((prev, current) => {
+            return prev.avgLatency > current.avgLatency ? prev : current;
+          }).avgLatency;
 
-        lowest_latency = data.reduce((prev, current) => {
-          return prev.avgLatency > current.avgLatency ? current : prev;
-        }).avgLatency;
+          lowest_latency = data.reduce((prev, current) => {
+            return prev.avgLatency > current.avgLatency ? current : prev;
+          }).avgLatency;
 
-        // weights for different metrics
-        let w0 = 0.3; // total packages
-        let w1 = 0.5; // packages under 500ms
-        let w2 = 0.4; // latency
+          // weights for different metrics
+          let w0 = 0.3; // total packages
+          let w1 = 0.5; // packages under 500ms
+          let w2 = 0.4; // latency
 
-        /** score function */
-        const scoreFn = (competitor) =>
-          w0 * (competitor.totalPackages / max_packages) * 100 +
-          ((w1 * competitor.packagesUnder500ms) / max_packages) * 100 +
-          w2 *
-            (1 - (competitor.avgLatency - lowest_latency) / highest_latency) *
-            100;
+          /** score function */
+          const scoreFn = (competitor) =>
+            w0 * (competitor.totalPackages / max_packages) * 100 +
+            ((w1 * competitor.packagesUnder500ms) / max_packages) * 100 +
+            w2 *
+              (1 - (competitor.avgLatency - lowest_latency) / highest_latency) *
+              100;
 
-        // const scoreFn = (competitor) =>
-        //   w0 * (competitor.totalPackages / max_packages) * 100 +
-        //   ((w1 * competitor.packagesUnder500ms) / max_packages) * 100 -
-        //   w2 * competitor.avgLatency;
+          // const scoreFn = (competitor) =>
+          //   w0 * (competitor.totalPackages / max_packages) * 100 +
+          //   ((w1 * competitor.packagesUnder500ms) / max_packages) * 100 -
+          //   w2 * competitor.avgLatency;
 
-        // console.log(data[0].name, scoreFn(data[0]));
-        // console.log(data[1].name, scoreFn(data[1]));
+          // console.log(data[0].name, scoreFn(data[0]));
+          // console.log(data[1].name, scoreFn(data[1]));
 
-        /** function for ranking a competitor based on their score. */
-        const rankingFn = (a, b) => scoreFn(b) - scoreFn(a);
+          /** function for ranking a competitor based on their score. */
+          const rankingFn = (a, b) => scoreFn(b) - scoreFn(a);
 
-        data.sort(rankingFn);
-        setCompetitors(data);
-        setError(null); // Clear the error if the fetch is successful
+          data.sort(rankingFn);
+          setCompetitors(data);
+          setError(null); // Clear the error if the fetch is successful
+        }
       } catch (error) {
         setError(error.message);
       }
