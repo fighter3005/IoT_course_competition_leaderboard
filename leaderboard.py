@@ -55,7 +55,11 @@ if serial_connected:
         data_batch = []
         failed_batches = []
         while serial_connected:
-            line = ser.readline().decode('utf-8').strip()
+            try:
+                line = ser.readline().decode('utf-8').strip()
+            except:
+                print("UnicodeDecodeError occurred. Skipping line.")    
+            
             if line:
                 # print(stop_timer_started)
                 # if not stop_timer_started:

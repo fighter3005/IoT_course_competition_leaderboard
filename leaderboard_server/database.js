@@ -1,6 +1,6 @@
 const sqlite3 = require("sqlite3").verbose();
 
-const persistance = false;
+const persistance = true;
 const max_measurement_counter = 1500;
 const regex = /^((1|3|6|10));(\d+);(-?\d+\.\d);(\d+\.\d);(\d+);(\d+)$/;
 
@@ -36,6 +36,7 @@ db.serialize(() => {
       competitorName TEXT,
       color TEXT,
       FOREIGN KEY (competitorName) REFERENCES competitor_data(competitorName) ON DELETE CASCADE
+      UNIQUE(competitorName)
     )`,
     (err) => {
       if (err) {
@@ -115,7 +116,7 @@ const saveCompetitorData = (data) => {
 const getCompetitorsData = () => {
   return new Promise((resolve, reject) => {
     const query = `
-      SELECT 
+      SELECT
         c.competitorName,
         c.nodeID,
         AVG(c.txTime) as avgLatency,

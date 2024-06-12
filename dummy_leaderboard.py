@@ -7,8 +7,8 @@ import time
 server_url = "https://api.leaderboard.cau.ninja"
 
 competitors = [
-    {"name": "Competitor_A", "color": "#FF5733"},
-    {"name": "Competitor_B", "color": "#33FF57"},
+    {"name": "Competitor_A", "color": "#33FF57"},
+    {"name": "Competitor_B", "color": "#FF5733"},
     {"name": "Competitor_C", "color": "#3357FF"},
     {"name": "Competitor_D", "color": "#FF33A1"},
 ]
@@ -35,21 +35,22 @@ for competitor in competitors:
 # Generate and send dummy data
 try:
     start_time = time.time()
-    measurement_counters = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+    measurement_counters = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, 0]]
     # while time.time() - start_time <= 310:  # Run for 5 minutes
     for _ in range(300): # just send 300*5 data points per node for each competitor in approx 2.5 minutes
         index = 0
         for competitor in competitors:
             data_batch = []
             id = 0
-            for nodeID in range(1, 5):  # 4 nodes per competitor
+            for nodeID in range(1, len(measurement_counters[index]) + 1):  # 4 nodes per competitor
                 id += nodeID
                 # print(id)
                 for _ in range(5):  # Generate 5 measurements per node per batch
                     measurement_counters[index][nodeID-1] += 1
                     data = generate_dummy_data(id, measurement_counters[index][nodeID-1]) 
                     data_batch.append(data)
-            
+                    data = generate_dummy_data(id, measurement_counters[index][nodeID-1])
+                    data_batch.append(data)
        
 
             # Send data batch to the server
@@ -60,6 +61,6 @@ try:
             else:
                 print(f"Failed to send data batch for {competitor['name']}.")
             index += 1
-        time.sleep(0.5)  # Simulate a short delay between batches
+        time.sleep(0.1)  # Simulate a short delay between batches
 except Exception as e:
     print(f"An error occurred during data generation: {e}")
