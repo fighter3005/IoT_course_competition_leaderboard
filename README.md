@@ -25,6 +25,10 @@ Then use the provided `leaderboard.py` to capture, save and send the data genera
 - install dependencies with `npm install`
 - then start with `npm start`
 
+**IMPORTANT NOTE**
+
+Please kick the node_module folders before building the docker image, since they will be copied over and make the express server fail to start.
+
 ## Configuration:
 
 **Frontend:**
