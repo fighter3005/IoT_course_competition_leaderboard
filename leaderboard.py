@@ -7,7 +7,7 @@ from threading import Timer
 ################################################### TODO: ###################################################
 color = None # TODO: set your custom color here (optional)
 competitorName = "Group_X" # TODO: set your group name here! (required)
-serial_port = '/dev/tty.usbmodem0006832480041' # TODO: set serial port here! (required)
+serial_port = '/dev/tty.usbmodem0006830621411' # TODO: set serial port here! (required)
 baud_rate = 115200 # TODO: set baud rate here! (required)
 
 # Regular expression to match the desired output format (also enforced server-side)
